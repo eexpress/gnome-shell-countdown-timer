@@ -32,7 +32,8 @@ class Indicator extends PanelMenu.Button {
 // group icons
 		let item0 = new PopupMenu.PopupMenuItem('');
 		//~ let box = new St.BoxLayout();
-		let icongroup = ['alarm-symbolic','software-update-urgent-symbolic','software-update-available-symbolic','appointment-soon-symbolic'];
+		let icongroup = ['alarm-symbolic','software-update-urgent-symbolic','software-update-available-symbolic','appointment-soon-symbolic',
+		'scan-type-batch-symbolic'];
 		var icon = new Array();
 		var butt = new Array();
 		for (var i in icongroup) {
@@ -67,8 +68,17 @@ class Indicator extends PanelMenu.Button {
 			Gio.icon_new_for_string(Me.path + "/at-gui.svg");
 		});
 		this.menu.addMenuItem(item2);
+
+		let item3 = new PopupMenu.PopupMenuItem("𝕖𝕖𝕩𝕡𝕤𝕤@𝕘𝕞𝕒𝕚𝕝.𝕔𝕠𝕞");
+		this.menu.addMenuItem(item3);
 	}
 });
+
+//~ http://textconverter.net/
+//~ 🅰🅱🅲🅳🅴🅵🅶🅷🅸🅹🅺🅻🅼🅽🅾🅿🆀🆁🆂🆃🆄🆅🆆🆇🆈🆉 ❿⓫⓬⓭⓮⓯⓰⓱⓲⓳⓴
+//~ 🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩 ⓿❶❷❸❹❺❻❼❽❾
+//~ 𝒆𝒆𝒙𝒑𝒔𝒔@𝒈𝒎𝒂𝒊𝒍.𝒄𝒐𝒎 🅴🅴🆇🅿🆂🆂@🅶🅼🅰🅸🅻.🅲🅾🅼 🅔🅔🅧🅟🅢🅢@🅖🅜🅐🅘🅛.🅒🅞🅜
+//~ 🅲🅾🆄🅽🆃🅳🅾🆆🅽 / 🆃🅸🅼🅴🆁 𝕖𝕖𝕩𝕡𝕤𝕤@𝕘𝕞𝕒𝕚𝕝.𝕔𝕠𝕞
 
 class Extension {
 	constructor(uuid) {

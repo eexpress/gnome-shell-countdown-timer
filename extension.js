@@ -30,20 +30,25 @@ class Indicator extends PanelMenu.Button {
 		this.add_child(stock_icon);
 
 // group icons
-		let item0 = new PopupMenu.PopupMenuItem('');
 		//~ let box = new St.BoxLayout();
+		let item0 = new PopupMenu.PopupMenuItem('');
 		let icongroup = ['alarm-symbolic','software-update-urgent-symbolic','software-update-available-symbolic','appointment-soon-symbolic',
-		'scan-type-batch-symbolic'];
+		'file:stopwatch.svg','file:at-gui.svg'];
 		var icon = new Array();
 		var butt = new Array();
 		for (var i in icongroup) {
 			icon[i] = new St.Icon({icon_name: icongroup[i], style_class: 'system-status-icon'});
+			if(icongroup[i].substr(0, 5) == "file:"){
+				icon[i].gicon = Gio.icon_new_for_string(
+				Me.path + "/" + icongroup[i].substr(5));
+			}
+
 			butt[i] = new St.Button({
 				can_focus: true,
 				child: icon[i],
 				//~ x_align: Clutter.ActorAlign.END, x_expand: true, y_expand: true
 				});
-			//~ butt[i].connect('button-press-event', () => { stock_icon.icon_name = icongroup[i]; Main.notify(icongroup[i]); });
+			//~ butt[i].connect('button-press-event', () => { stock_icon.icon_name = icongroup[i]; });
 			butt[i].connect('button-press-event', clickchangeicon(i));
 			item0.actor.add_child(butt[i]);
 		}
@@ -52,20 +57,22 @@ class Indicator extends PanelMenu.Button {
 		function clickchangeicon(i){
 			return function() {
 				stock_icon.icon_name = icongroup[i];
-				};
-			}
+				if(icongroup[i].substr(0, 5) == "file:"){
+					stock_icon.gicon = Gio.icon_new_for_string(
+					Me.path + "/" + icongroup[i].substr(5));
+				}
+			};
+		}
 
 		let item1 = new PopupMenu.PopupMenuItem(_('延时几分钟后提醒'));
 		item1.connect('activate', () => {
 			//~ Main.notify(_('Whatʼs up, folks? '));
-			stock_icon.icon_name = 'software-update-urgent-symbolic';
 		});
 		this.menu.addMenuItem(item1);
 
 		let item2 = new PopupMenu.PopupMenuItem(_('定时几点几分提醒'));
 		item2.connect('activate', () => {
-			stock_icon.gicon =
-			Gio.icon_new_for_string(Me.path + "/at-gui.svg");
+			//~ Main.notify(_('Whatʼs up, folks? '));
 		});
 		this.menu.addMenuItem(item2);
 

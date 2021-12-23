@@ -1,6 +1,6 @@
 {
   "name": "AT Gui",
-  "description": "Timer / Counte Down base on AT",
+  "description": "CountDown / Timer base on AT",
   "uuid": "eexpss@gmail.com",
   "shell-version": [
     "40"

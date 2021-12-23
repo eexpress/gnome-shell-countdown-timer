@@ -42,11 +42,17 @@ class Indicator extends PanelMenu.Button {
 				child: icon[i],
 				//~ x_align: Clutter.ActorAlign.END, x_expand: true, y_expand: true
 				});
-			butt[i].connect('button-press-event', () => { stock_icon.icon_name = icongroup[i]; Main.notify(icongroup[i]); });
+			//~ butt[i].connect('button-press-event', () => { stock_icon.icon_name = icongroup[i]; Main.notify(icongroup[i]); });
+			butt[i].connect('button-press-event', clickchangeicon(i));
 			item0.actor.add_child(butt[i]);
 		}
 		this.menu.addMenuItem(item0);
 
+		function clickchangeicon(i){
+			return function() {
+				stock_icon.icon_name = icongroup[i];
+				};
+			}
 
 		let item1 = new PopupMenu.PopupMenuItem(_('延时几分钟后提醒'));
 		item1.connect('activate', () => {

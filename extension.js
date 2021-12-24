@@ -33,7 +33,7 @@ class Indicator extends PanelMenu.Button {
 		//~ let box = new St.BoxLayout();
 		let item0 = new PopupMenu.PopupMenuItem('');
 		let icongroup = ['alarm-symbolic','software-update-urgent-symbolic','software-update-available-symbolic','appointment-soon-symbolic',
-		'file:stopwatch.svg','file:at-gui.svg'];
+		'file:stopwatch-symbolic.svg','file:at-gui-symbolic.svg','file:alarm-symbolic.svg'];
 		var icon = new Array();
 		var butt = new Array();
 		for (var i in icongroup) {

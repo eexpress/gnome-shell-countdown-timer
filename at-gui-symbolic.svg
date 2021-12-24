@@ -3,7 +3,7 @@
    viewBox="0 0 16 16"
    version="1.1"
    id="svg12"
-   sodipodi:docname="at-gui.svg"
+   sodipodi:docname="at-gui-symbolic.svg"
    inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -33,13 +33,13 @@
      d="m 13.909,1.307 -3.304,3.307 c 0.732,0.273 1.5,0.527 2.306,0.764 0.8,0.231 1.592,0.436 2.375,0.612 A 48.514,48.514 0 0 0 14.665,3.624 40.298,40.298 0 0 0 13.909,1.308 Z"
      overflow="visible"
      id="path2"
-     style="fill:#f7f7f7;fill-opacity:1" />
+     style="fill:#2e3436;fill-opacity:1" />
   <path
      d="m 12.756,11.656 -0.072,0.084 0.75,0.66 0.091,-0.103 0.04,-0.05 0.48,-0.72 -0.832,-0.554 z m -1.11,1.108 -0.34,0.226 0.555,0.832 0.368,-0.244 0.05,-0.039 0.422,-0.37 -0.658,-0.751 z m -1.353,0.779 -0.676,0.23 0.322,0.948 0.717,-0.246 0.06,-0.024 0.218,-0.11 -0.442,-0.896 z m -2.326,0.459 0.066,0.996 0.801,-0.053 -0.066,-0.998 z"
      font-family="sans-serif"
      font-weight="400"
      overflow="visible"
-     style="font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-feature-settings:normal;text-indent:0;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;text-transform:none;text-orientation:mixed;shape-padding:0;isolation:auto;mix-blend-mode:normal;fill:#f7f7f7;fill-opacity:1"
+     style="font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-feature-settings:normal;text-indent:0;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;text-transform:none;text-orientation:mixed;shape-padding:0;isolation:auto;mix-blend-mode:normal;fill:#2e3436;fill-opacity:1"
      white-space="normal"
      id="path4" />
   <path
@@ -47,11 +47,11 @@
      font-family="sans-serif"
      font-weight="400"
      overflow="visible"
-     style="font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-feature-settings:normal;text-indent:0;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;text-transform:none;text-orientation:mixed;shape-padding:0;isolation:auto;mix-blend-mode:normal;fill:#f7f7f7;fill-opacity:1"
+     style="font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-feature-settings:normal;text-indent:0;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;text-transform:none;text-orientation:mixed;shape-padding:0;isolation:auto;mix-blend-mode:normal;fill:#2e3436;fill-opacity:1"
      white-space="normal"
      id="path8" />
   <path
-     style="fill:#f7f7f7;stroke:#f9f9f9;stroke-width:0;stroke-linecap:round;fill-opacity:1"
+     style="fill:#2e3436;stroke:#f9f9f9;stroke-width:0;stroke-linecap:round;fill-opacity:1"
      id="path855"
      sodipodi:type="arc"
      sodipodi:cx="8.0292339"

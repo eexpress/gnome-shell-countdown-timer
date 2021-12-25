@@ -28,12 +28,11 @@ class Indicator extends PanelMenu.Button {
 		style_class: 'system-status-icon',
 		});
 		this.add_child(stock_icon);
-
-// group icons
-		//~ let box = new St.BoxLayout();
+//~ -------------------------------------------------------------------
+// group icons of notify.
 		let item0 = new PopupMenu.PopupMenuItem('');
-		let icongroup = ['alarm-symbolic','software-update-urgent-symbolic','software-update-available-symbolic','appointment-soon-symbolic',
-		'file:stopwatch-symbolic.svg','file:at-gui-symbolic.svg','file:alarm-symbolic.svg'];
+		//~ let icongroup = ['alarm-symbolic','software-update-urgent-symbolic','software-update-available-symbolic','appointment-soon-symbolic',		'file:stopwatch-symbolic.svg','file:at-gui-symbolic.svg',		'file:alarm-symbolic.svg'];
+		let icongroup = ['alarm-symbolic','call-start-symbolic','go-home-symbolic','media-view-subtitles-symbolic','airplane-mode-symbolic',	'system-users-symbolic','applications-games-symbolic','emoji-food-symbolic','face-devilish-symbolic','emblem-favorite-symbolic'];
 		var icon = new Array();
 		var butt = new Array();
 		for (var i in icongroup) {
@@ -52,6 +51,13 @@ class Indicator extends PanelMenu.Button {
 			butt[i].connect('button-press-event', clickchangeicon(i));
 			item0.actor.add_child(butt[i]);
 		}
+// 需要增加说明文字？
+		//~ let box = new St.BoxLayout({style_class: "expression-box", vertical: true });
+		//~ box.add_child(new St.Label({ text: _('选择提醒图标') }));
+		//~ box.add_child(item0);
+		//~ let item00 = new PopupMenu.PopupMenuItem('');
+		//~ item00.actor.add_child(box);
+		//~ this.menu.addMenuItem(item00);
 		this.menu.addMenuItem(item0);
 
 		function clickchangeicon(i){
@@ -63,21 +69,44 @@ class Indicator extends PanelMenu.Button {
 				}
 			};
 		}
-
-		let item1 = new PopupMenu.PopupMenuItem(_('延时几分钟后提醒'));
-		item1.connect('activate', () => {
-			//~ Main.notify(_('Whatʼs up, folks? '));
+//~ -------------------------------------------------------------------
+		let item1 = new PopupMenu.PopupBaseMenuItem({
+                reactive: false,
+                can_focus: false
+            });
+		let input = new St.Entry({
+			name: 'searchEntry',
+			style_class: 'search-entry',
+			can_focus: true,
+			hint_text: _('输入所需的延时分钟数，回车生效。'),
+			track_hover: true,
+			x_expand: true,
+			y_expand: true
 		});
+		item1.add(input);
 		this.menu.addMenuItem(item1);
+		this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+//~ -------------------------------------------------------------------
+		//~ this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+		//~ let item9 = new PopupMenu.PopupMenuItem("𝕖𝕖𝕩𝕡𝕤𝕤@𝕘𝕞𝕒𝕚𝕝.𝕔𝕠𝕞");
+		//~ this.menu.addMenuItem(item9);
+//~ -------------------------------------------------------------------
 
-		let item2 = new PopupMenu.PopupMenuItem(_('定时几点几分提醒'));
-		item2.connect('activate', () => {
-			//~ Main.notify(_('Whatʼs up, folks? '));
+		let area = new St.DrawingArea({
+			width: 32,
+			height: 32
 		});
-		this.menu.addMenuItem(item2);
 
-		let item3 = new PopupMenu.PopupMenuItem("𝕖𝕖𝕩𝕡𝕤𝕤@𝕘𝕞𝕒𝕚𝕝.𝕔𝕠𝕞");
-		this.menu.addMenuItem(item3);
+		area.connect('repaint', (area) => {
+			// Get the cairo context
+			let cr = area.get_context();
+
+			// Do some drawing with cairo
+
+			// Explicitly tell Cairo to free the context memory
+			cr.$dispose();
+		});
+//~ -------------------------------------------------------------------
 	}
 });
 

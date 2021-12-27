@@ -18,6 +18,8 @@ const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 
+const myicon = Gio.icon_new_for_string;
+
 const Indicator = GObject.registerClass(
 class Indicator extends PanelMenu.Button {
 	_init() {
@@ -36,10 +38,10 @@ class Indicator extends PanelMenu.Button {
 		var icon = new Array();
 		var butt = new Array();
 		for (var i in icongroup) {
-			icon[i] = new St.Icon({icon_name: icongroup[i], style_class: 'system-status-icon', icon_size: 64});
+			//~ icon[i] = new St.Icon({icon_name: icongroup[i], style_class: 'iconlist', icon_size: 48 });
+			icon[i] = new St.Icon({icon_name: icongroup[i], style_class: 'iconlist' });
 			if(icongroup[i].substr(0, 5) == "file:"){
-				icon[i].gicon = Gio.icon_new_for_string(
-				Me.path + "/" + icongroup[i].substr(5));
+				icon[i].gicon = myicon(	Me.path + "/" + icongroup[i].substr(5));
 			}
 
 			butt[i] = new St.Button({
@@ -64,8 +66,7 @@ class Indicator extends PanelMenu.Button {
 			return function() {
 				stock_icon.icon_name = icongroup[i];
 				if(icongroup[i].substr(0, 5) == "file:"){
-					stock_icon.gicon = Gio.icon_new_for_string(
-					Me.path + "/" + icongroup[i].substr(5));
+					stock_icon.gicon = myicon( Me.path + "/" + icongroup[i].substr(5));
 				}
 			};
 		}
@@ -76,27 +77,22 @@ class Indicator extends PanelMenu.Button {
             });
 		let input = new St.Entry({
 			name: 'searchEntry',
-			//~ style_class: 'search-entry big_text',
 			style_class: 'big_text',
-			//~ primary_icon: new St.Icon({ icon_name: stock_icon.icon_name,
-			primary_icon: new St.Icon({ gicon: Gio.icon_new_for_string(
-				Me.path + "/countdown-symbolic.svg"),
-				style_class: 'system-status-icon', icon_size: 32}),
-			secondary_icon: new St.Icon({ gicon: Gio.icon_new_for_string(
-				Me.path + "/stopwatch-symbolic.svg"),
-				style_class: 'system-status-icon', icon_size: 32}),
-			//~ secondary_icon: stock_icon,
+			//~ primary_icon: new St.Icon({ gicon: myicon( Me.path + "/countdown-symbolic.svg"), style_class: 'system-status-icon', icon_size: 32}),
+			primary_icon: new St.Icon({ gicon: myicon(Me.path+"/countdown-symbolic.svg") }),
+			secondary_icon: new St.Icon({ gicon: myicon(Me.path+"/stopwatch-symbolic.svg") }),
 			can_focus: true,
-			hint_text: _('输入所需的延时分钟数，回车生效。'),
+			hint_text: _('输入 数字 按分钟延时，或 HH:MM 格式定时，回车生效。'),
 			track_hover: true,
 			x_expand: true,
-			//~ y_expand: true
 		});
 		item_input.add(input);
 		this.menu.addMenuItem(item_input);
 		this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 //~ -------------------------------------------------------------------
 // In progress item
+		var list = new Object({current: 0, total: 5, str: '5'});
+		var list = new Object({current: 0, total: 105, str: '5:30'});
 		//~ var run = new Array();
 		this.menu.addMenuItem(addrun('2'));
 		this.menu.addMenuItem(addrun('2sw'));
@@ -121,7 +117,7 @@ class Indicator extends PanelMenu.Button {
 // stock_icon, timer-symbolic.svg, 还有 x 分钟到 HH:MM
 		}
 //~ -------------------------------------------------------------------
-		let area = new St.DrawingArea({ width: 128,	height: 128	});
+		let area = new St.DrawingArea({ width: 500,	height: 100	});
 
 		area.connect('repaint', ondraw(area));
 
@@ -141,6 +137,7 @@ class Indicator extends PanelMenu.Button {
 				cr.move_to(30,40);
 				cr.arc(0,0,50,0,2*Math.PI);
 				cr.fill();
+				area.queue_repaint();
 				// Explicitly tell Cairo to free the context memory
 				cr.$dispose();
 			};

@@ -23,6 +23,7 @@ const myicon = Gio.icon_new_for_string;
 const Indicator = GObject.registerClass(
 class Indicator extends PanelMenu.Button {
 	_init() {
+		var that = this;	// 想缓存，在闭包中，代替调用this。
 		super._init(0.0, _('My Shiny Indicator'));
 
 		let stock_icon = new St.Icon({
@@ -68,7 +69,7 @@ class Indicator extends PanelMenu.Button {
 				if(icongroup[i].substr(0, 5) == "file:"){
 					stock_icon.gicon = myicon( Me.path + "/" + icongroup[i].substr(5));
 				}
-			};
+			}
 		}
 //~ -------------------------------------------------------------------
 		let item_input = new PopupMenu.PopupBaseMenuItem({
@@ -86,20 +87,24 @@ class Indicator extends PanelMenu.Button {
 			track_hover: true,
 			x_expand: true,
 		});
+		input.connect( 'primary-icon-clicked', addtimer(input.text) );
+		input.connect( 'secondary-icon-clicked', addtimer(input.text) );
 		item_input.add(input);
 		this.menu.addMenuItem(item_input);
 		this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 //~ -------------------------------------------------------------------
 // In progress item
-		var list = new Object({current: 0, total: 5, str: '5'});
-		var list = new Object({current: 0, total: 105, str: '5:30'});
+		//~ addtimer('99999');
+		//~ var list = new Object({current: 0, total: 5, str: '5'});
+		//~ var list = new Object({current: 0, total: 105, str: '5:30'});
 		//~ var run = new Array();
-		this.menu.addMenuItem(addrun('2'));
-		this.menu.addMenuItem(addrun('2sw'));
+		//~ this.menu.addMenuItem(addtimer('2'));
+		//~ this.menu.addMenuItem(addtimer('2sw'));
 		//~ this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 		//~ let item9 = new PopupMenu.PopupMenuItem("𝕖𝕖𝕩𝕡𝕤𝕤@𝕘𝕞𝕒𝕚𝕝.𝕔𝕠𝕞");
 		//~ this.menu.addMenuItem(item9);
-		function addrun (str0){
+		function addtimer (str0){
+			return function() {
 			let box0 = new St.BoxLayout({ style_class: "expression-box" });
 			let icon0 =  new St.Icon({ icon_name: stock_icon.icon_name,
 				style_class: 'system-status-icon', icon_size: 32});
@@ -111,10 +116,12 @@ class Indicator extends PanelMenu.Button {
 			box0.add_child(lb0);
 			let item0 = new PopupMenu.PopupMenuItem('');
 			item0.add_child(box0);
-			return item0;
+			that.menu.addMenuItem(item0);
+			//~ return item0;
 // stock_icon, countdown-symbolic.svg, 倒计时还剩余 x 分钟
 // stock_icon, stopwatch-symbolic.svg, 倒计时还剩余 x 分钟
 // stock_icon, timer-symbolic.svg, 还有 x 分钟到 HH:MM
+			}
 		}
 //~ -------------------------------------------------------------------
 		let area = new St.DrawingArea({ width: 500,	height: 100	});
@@ -123,7 +130,7 @@ class Indicator extends PanelMenu.Button {
 
 		let item_cairo = new PopupMenu.PopupMenuItem('');
 		item_cairo.actor.add_child(area);
-		this.menu.addMenuItem(item_cairo);
+		//~ this.menu.addMenuItem(item_cairo);
 
 		function ondraw(area){
 			return function() {
@@ -140,7 +147,7 @@ class Indicator extends PanelMenu.Button {
 				area.queue_repaint();
 				// Explicitly tell Cairo to free the context memory
 				cr.$dispose();
-			};
+			}
 		}
 //~ -------------------------------------------------------------------
 	}

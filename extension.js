@@ -2,83 +2,54 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-/* exported init */
-
-const GETTEXT_DOMAIN = 'my-indicator-extension';
 //~ const Cairo = imports.cairo;
-const { GObject, Gio, Clutter, St } = imports.gi;
-const Me = imports.misc.extensionUtils.getCurrentExtension();
 //~ const Mainloop = imports.mainloop;
 //~ Mainloop.timeout_add(3000, function () { text.destroy(); });
-const Gettext = imports.gettext.domain(GETTEXT_DOMAIN);
-const _ = Gettext.gettext;
 
+const GETTEXT_DOMAIN = 'countdown-indicator-extension';
+const _ = imports.gettext.domain(GETTEXT_DOMAIN).gettext;
+
+const { GObject, Gio, Clutter, St } = imports.gi;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
-
-//~ const myicon = Gio.icon_new_for_string;
+const msg = Main.notify;
 
 const Indicator = GObject.registerClass(
 class Indicator extends PanelMenu.Button {
 	_init() {
 		var that = this;	// 想缓存，在闭包中，代替调用this。
-		super._init(0.0, _('Countdown / Timer Indicator'));
-
-		let stock_icon = new St.Icon({
-		icon_name: 'alarm-symbolic',
-		style_class: 'system-status-icon',
-		});
+		super._init(0.0, _('Countdown Indicator'));
+//~ -------------------  面板主图标 ---------------------------
+		var stock_icon = new St.Icon({ icon_name: 'alarm-symbolic' });
 		this.add_child(stock_icon);
-//~ -------------------------------------------------------------------
-// group icons of notify.
+//~ ----------------  第一行可选图标组 -------------------------
 		let item_icons = new PopupMenu.PopupMenuItem('');
-		//~ let icongroup = ['alarm-symbolic','software-update-urgent-symbolic','software-update-available-symbolic','appointment-soon-symbolic',		'file:stopwatch-symbolic.svg','file:at-gui-symbolic.svg',		'file:alarm-symbolic.svg'];
-		let icongroup = ['alarm-symbolic','call-start-symbolic','go-home-symbolic','media-view-subtitles-symbolic','airplane-mode-symbolic',	'system-users-symbolic','applications-games-symbolic','emoji-food-symbolic','face-devilish-symbolic','emblem-favorite-symbolic'];
-		var icon = new Array();
-		var butt = new Array();
-		for (var i in icongroup) {
-			icon[i] = new St.Icon({icon_name: icongroup[i], style_class: 'iconlist' });
-			if(icongroup[i].substr(0, 5) == "file:"){
-				icon[i].gicon = local_icon(icongroup[i].substr(5));
-			}
-
-			butt[i] = new St.Button({
-				can_focus: true,
-				child: icon[i],
-				//~ x_align: Clutter.ActorAlign.END, x_expand: true, y_expand: true
-				});
-			//~ butt[i].connect('button-press-event', () => { stock_icon.icon_name = icongroup[i]; });
-			butt[i].connect('button-press-event', clickchangeicon(i));
-			item_icons.actor.add_child(butt[i]);
+		['alarm-symbolic','call-start-symbolic','go-home-symbolic','media-view-subtitles-symbolic','airplane-mode-symbolic','system-users-symbolic','applications-games-symbolic','emoji-food-symbolic','face-devilish-symbolic','emblem-favorite-symbolic','file:stopwatch-symbolic.svg'].forEach(showicon);
+		function showicon(item){
+			let icon = new St.Icon({ style_class: 'iconlist' });
+			set_icon(icon, item);	// icon 不能直接 button-press-event ？？？
+			//~ St.Icon Signals Inherited: Clutter.Container (3), GObject.Object (1), Clutter.Actor (25), St.Widget (2)
+			let butt = new St.Button({ can_focus: true, child: icon });
+			butt.connect('button-press-event', () => { set_icon(stock_icon, item); });
+			item_icons.actor.add_child(butt);
+		};
+		function set_icon(icon, str){
+		// 使用本地图标文件'file:stopwatch-symbolic.svg'，PopupImageMenuItem 无法设置gicon了。
+			if(str.substr(0, 5) == "file:"){
+				icon.gicon = local_icon(str.substr(5));
+			} else { icon.icon_name = str; }
 		}
-// 需要增加说明文字？
-		//~ let box = new St.BoxLayout({style_class: "expression-box", vertical: true });
-		//~ box.add_child(new St.Label({ text: _('选择提醒图标') }));
-		//~ box.add_child(item_icons);
-		//~ let item_icons0 = new PopupMenu.PopupMenuItem('');
-		//~ item_icons0.actor.add_child(box);
-		//~ this.menu.addMenuItem(item_icons0);
 		this.menu.addMenuItem(item_icons);
-
-		function clickchangeicon(i){
-			return function() {
-				stock_icon.icon_name = icongroup[i];
-				if(icongroup[i].substr(0, 5) == "file:"){
-					stock_icon.gicon = local_icon(icongroup[i].substr(5));
-				}
-			}
-		}
-
+//~ ---------------------------------------------------------
 		function local_icon(str){
-			return Gio.icon_new_for_string(Me.path+"/"+str);
+			return Gio.icon_new_for_string(
+			ExtensionUtils.getCurrentExtension().path+"/"+str);
 		}
-//~ -------------------------------------------------------------------
+//~ ------------------- 第二行输入栏 --------------------------
 		let item_input = new PopupMenu.PopupBaseMenuItem({
-                reactive: false,
-                can_focus: false
-            });
+                reactive: false, can_focus: false });
 		let input = new St.Entry({
 			name: 'searchEntry',
 			style_class: 'big_text',
@@ -89,34 +60,71 @@ class Indicator extends PanelMenu.Button {
 			track_hover: true,
 			x_expand: true,
 		});
-		input.connect( 'primary-icon-clicked', addtimer(input.text) );
-		input.connect( 'secondary-icon-clicked', addtimer(input.text) );
+		input.connect('primary-icon-clicked', ()=>{add_timer();});
+		input.connect('secondary-icon-clicked', ()=>{add_timer();});
+		//~ input.connect('key-press-event', (event)=>{if(event.get_key_symbol() == Clutter.KEY_Left)add_timer();});
+		input.connect('key-press-event', (self, event)=>{
+			//~ let [success, keyval] = event.get_keyval();
+			//~ let keyname = Gdk.keyval_name(keyval);
+			//~ if (keyname === "Control_L"){add_timer();}
+			//~ const symbol = event.get_key_symbol();
+			//~ if (symbol === Clutter.KEY_KP_Enter) {add_timer(); return true;}
+			//~ if (event.get_key_symbol() === Clutter.KEY_Enter){add_timer();}
+			//~ if(event.keyval == Clutter.KEY_Enter){add_timer();} Clutter.KEY_Escape KEY_ISO_Enter KEY_KP_Enter KEY_3270_Enter KEY_equal
+			});
 		item_input.add(input);
+		function add_timer (){
+			let text = '  倒计时还剩余xxxx分钟，目标：'+ input.text;
+			let item = new PopupMenu.PopupImageMenuItem(text, stock_icon.icon_name);
+			// 无法判断并提取gicon了。只能使用icon_name的stock图标？
+			item.style_class = 'large_text';
+			item.can_focus = true;
+			item.connect('button-press-event', ()=> {delete_item(item);});
+			that.menu.addMenuItem(item);
+		}
+		function delete_item(item){
+			//
+			// clipboard-indicator 自己带的一个 confirmDialog.js
+			//~ ExtensionUtils.getCurrentExtension().imports.confirmDialog.openConfirmDialog('x', 'ww', '', _("Clear"), _("Cancel"), () => {
+				item.destroy();
+				//~ _about() {
+        //~ let aboutDialog = new Gtk.AboutDialog({
+            //~ authors: ['Giovanni Campagna <gcampagna@src.gnome.org>'],
+            //~ translator_credits: _("translator-credits"),
+            //~ program_name: _("JS Application"),
+            //~ comments: _("Demo JS Application and template"),
+            //~ copyright: 'Copyright 2013 The gjs developers',
+            //~ license_type: Gtk.License.GPL_2_0,
+            //~ logo_icon_name: 'com.example.Gtk.JSApplication',
+            //~ version: pkg.version,
+            //~ website: 'http://www.example.com/gtk-js-app/',
+            //~ wrap_license: true,
+            //~ modal: true,
+            //~ transient_for: this,
+        //~ });
+
+        //~ aboutDialog.show();
+        //~ aboutDialog.connect('response', function () {
+            //~ aboutDialog.destroy();
+        //~ });
+    //~ }
+			//~ })
+		}
 		this.menu.addMenuItem(item_input);
+//~ -------------------- 分割栏以下为定时列表 -------------------
 		this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-//~ -------------------------------------------------------------------
 // In progress item
-		//~ addtimer('99999');
+		//~ add_timer('99999');
 		//~ var list = new Object({current: 0, total: 5, str: '5'});
 		//~ var list = new Object({current: 0, total: 105, str: '5:30'});
 		//~ var run = new Array();
-		//~ this.menu.addMenuItem(addtimer('2'));
-		//~ this.menu.addMenuItem(addtimer('2sw'));
+		//~ this.menu.addMenuItem(add_timer('2'));
+		//~ this.menu.addMenuItem(add_timer('2sw'));
 		//~ this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 		//~ let item9 = new PopupMenu.PopupMenuItem("𝕖𝕖𝕩𝕡𝕤𝕤@𝕘𝕞𝕒𝕚𝕝.𝕔𝕠𝕞");
 		//~ this.menu.addMenuItem(item9);
-		function addtimer (str0){
-			return function() {
-				let item0 = new PopupMenu.PopupImageMenuItem('  倒计时还剩余xxxx分钟，目标：5分钟/12:45。', stock_icon.icon_name);
-				item0.style_class = 'large_text';
-				that.menu.addMenuItem(item0);
-			}
-		}
-
-//~ -------------------------------------------------------------------
-		//~ function msg(str){ return function(){ Main.notify(str); }}
-		function msg(str){  Main.notify(str); }
-//~ -------------------------------------------------------------------
+//~ ---------------------------------------------------------
+//~ ---------------------------------------------------------
 		let area = new St.DrawingArea({ width: 500,	height: 100	});
 
 		area.connect('repaint', ondraw(area));
@@ -142,16 +150,15 @@ class Indicator extends PanelMenu.Button {
 				cr.$dispose();
 			}
 		}
-//~ -------------------------------------------------------------------
 	}
 });
-
+//~ ---------------------------------------------------------
 //~ http://textconverter.net/
 //~ 🅰🅱🅲🅳🅴🅵🅶🅷🅸🅹🅺🅻🅼🅽🅾🅿🆀🆁🆂🆃🆄🆅🆆🆇🆈🆉 ❿⓫⓬⓭⓮⓯⓰⓱⓲⓳⓴
 //~ 🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩 ⓿❶❷❸❹❺❻❼❽❾
 //~ 𝒆𝒆𝒙𝒑𝒔𝒔@𝒈𝒎𝒂𝒊𝒍.𝒄𝒐𝒎 🅴🅴🆇🅿🆂🆂@🅶🅼🅰🅸🅻.🅲🅾🅼 🅔🅔🅧🅟🅢🅢@🅖🅜🅐🅘🅛.🅒🅞🅜
 //~ 🅲🅾🆄🅽🆃🅳🅾🆆🅽 / 🆃🅸🅼🅴🆁 𝕖𝕖𝕩𝕡𝕤𝕤@𝕘𝕞𝕒𝕚𝕝.𝕔𝕠𝕞
-
+//~ ---------------------------------------------------------
 class Extension {
 	constructor(uuid) {
 		this._uuid = uuid;

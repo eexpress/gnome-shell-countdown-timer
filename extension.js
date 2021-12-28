@@ -18,13 +18,13 @@ const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 
-const myicon = Gio.icon_new_for_string;
+//~ const myicon = Gio.icon_new_for_string;
 
 const Indicator = GObject.registerClass(
 class Indicator extends PanelMenu.Button {
 	_init() {
 		var that = this;	// 想缓存，在闭包中，代替调用this。
-		super._init(0.0, _('My Shiny Indicator'));
+		super._init(0.0, _('Countdown / Timer Indicator'));
 
 		let stock_icon = new St.Icon({
 		icon_name: 'alarm-symbolic',
@@ -42,7 +42,7 @@ class Indicator extends PanelMenu.Button {
 			//~ icon[i] = new St.Icon({icon_name: icongroup[i], style_class: 'iconlist', icon_size: 48 });
 			icon[i] = new St.Icon({icon_name: icongroup[i], style_class: 'iconlist' });
 			if(icongroup[i].substr(0, 5) == "file:"){
-				icon[i].gicon = myicon(	Me.path + "/" + icongroup[i].substr(5));
+				icon[i].gicon = local_icon(icongroup[i].substr(5));
 			}
 
 			butt[i] = new St.Button({
@@ -67,9 +67,13 @@ class Indicator extends PanelMenu.Button {
 			return function() {
 				stock_icon.icon_name = icongroup[i];
 				if(icongroup[i].substr(0, 5) == "file:"){
-					stock_icon.gicon = myicon( Me.path + "/" + icongroup[i].substr(5));
+					stock_icon.gicon = local_icon(icongroup[i].substr(5));
 				}
 			}
+		}
+
+		function local_icon(str){
+			return Gio.icon_new_for_string(Me.path+"/"+str);
 		}
 //~ -------------------------------------------------------------------
 		let item_input = new PopupMenu.PopupBaseMenuItem({
@@ -79,16 +83,16 @@ class Indicator extends PanelMenu.Button {
 		let input = new St.Entry({
 			name: 'searchEntry',
 			style_class: 'big_text',
-			//~ primary_icon: new St.Icon({ gicon: myicon( Me.path + "/countdown-symbolic.svg"), style_class: 'system-status-icon', icon_size: 32}),
-			primary_icon: new St.Icon({ gicon: myicon(Me.path+"/countdown-symbolic.svg") }),
-			secondary_icon: new St.Icon({ gicon: myicon(Me.path+"/stopwatch-symbolic.svg") }),
+			//~ primary_icon: new St.Icon({ gicon: local_icon("countdown-symbolic.svg"), style_class: 'system-status-icon', icon_size: 32}),
+			primary_icon: new St.Icon({ gicon: local_icon("countdown-symbolic.svg") }),
+			secondary_icon: new St.Icon({ gicon: local_icon("stopwatch-symbolic.svg") }),
 			can_focus: true,
 			hint_text: _('输入 数字 按分钟延时，或 HH:MM 格式定时，回车生效。'),
 			track_hover: true,
 			x_expand: true,
 		});
 		input.connect( 'primary-icon-clicked', addtimer(input.text) );
-		input.connect( 'secondary-icon-clicked', addtimer(input.text) );
+		input.connect( 'secondary-icon-clicked', addtimer1(input.text) );
 		item_input.add(input);
 		this.menu.addMenuItem(item_input);
 		this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
@@ -103,6 +107,17 @@ class Indicator extends PanelMenu.Button {
 		//~ this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 		//~ let item9 = new PopupMenu.PopupMenuItem("𝕖𝕖𝕩𝕡𝕤𝕤@𝕘𝕞𝕒𝕚𝕝.𝕔𝕠𝕞");
 		//~ this.menu.addMenuItem(item9);
+		function addtimer1 (str0){
+			return function() {
+				//~ let icon0 =  new St.Icon({ icon_name: stock_icon.icon_name,
+				//~ style_class: 'system-status-icon', icon_size: 32});
+				//~ let lb0 = new St.Label({ style_class: 'big_text' });
+				//~ lb0.text = (str0 == "2") ? '  倒计时还剩余 x 分钟' : '  还有 x 分钟到 HH:MM' ;
+				let item0 = new PopupMenu.PopupImageMenuItem('xxxx', stock_icon.icon_name);
+				//~ let item0 = new PopupMenu.PopupImageMenuItem({text: 'xxxx', icon_name: stock_icon.icon_name, style_class: 'big_text', icon_size: 32});
+				that.menu.addMenuItem(item0);
+			}
+		}
 		function addtimer (str0){
 			return function() {
 			let box0 = new St.BoxLayout({ style_class: "expression-box" });
@@ -116,13 +131,18 @@ class Indicator extends PanelMenu.Button {
 			box0.add_child(lb0);
 			let item0 = new PopupMenu.PopupMenuItem('');
 			item0.add_child(box0);
+			//~ Main.notify(_('item0 added.'));
 			that.menu.addMenuItem(item0);
+			//~ item0.connect( 'button-press-event', msg(_('item0 clicked.')));
 			//~ return item0;
 // stock_icon, countdown-symbolic.svg, 倒计时还剩余 x 分钟
 // stock_icon, stopwatch-symbolic.svg, 倒计时还剩余 x 分钟
 // stock_icon, timer-symbolic.svg, 还有 x 分钟到 HH:MM
 			}
 		}
+//~ -------------------------------------------------------------------
+		//~ function msg(str){ return function(){ Main.notify(str); }}
+		function msg(str){  Main.notify(str); }
 //~ -------------------------------------------------------------------
 		let area = new St.DrawingArea({ width: 500,	height: 100	});
 

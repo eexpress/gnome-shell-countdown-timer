@@ -22,7 +22,7 @@ class Indicator extends PanelMenu.Button {
 		var that = this;	// 想缓存，在闭包中，代替调用this。
 		super._init(0.0, _('Countdown Indicator'));
 //~ -------------------  面板主图标 ---------------------------
-		var stock_icon = new St.Icon({ icon_name: 'alarm-symbolic' });
+		var stock_icon = new St.Icon({ icon_name: 'alarm-symbolic', icon_size: 36 });
 		this.add_child(stock_icon);
 //~ ----------------  第一行可选图标组 -------------------------
 		let item_icons = new PopupMenu.PopupMenuItem('');
@@ -60,10 +60,12 @@ class Indicator extends PanelMenu.Button {
 			track_hover: true,
 			x_expand: true,
 		});
+		//~ input.clutter_text.set_input_purpose(Clutter.DIGITS|Clutter.DATETIME);
 		input.connect('primary-icon-clicked', ()=>{add_timer();});
 		input.connect('secondary-icon-clicked', ()=>{add_timer();});
-		//~ input.connect('key-press-event', (event)=>{if(event.get_key_symbol() == Clutter.KEY_Left)add_timer();});
-		input.connect('key-press-event', (self, event)=>{
+		//~ input.clutter_text.connect('activate', (actor) => { log(`Activated: ${actor.text}`); });
+		input.clutter_text.connect('activate', (actor) => { add_timer(); });
+		//~ input.connect('key-press-event', (self, event)=>{
 			//~ let [success, keyval] = event.get_keyval();
 			//~ let keyname = Gdk.keyval_name(keyval);
 			//~ if (keyname === "Control_L"){add_timer();}
@@ -71,85 +73,36 @@ class Indicator extends PanelMenu.Button {
 			//~ if (symbol === Clutter.KEY_KP_Enter) {add_timer(); return true;}
 			//~ if (event.get_key_symbol() === Clutter.KEY_Enter){add_timer();}
 			//~ if(event.keyval == Clutter.KEY_Enter){add_timer();} Clutter.KEY_Escape KEY_ISO_Enter KEY_KP_Enter KEY_3270_Enter KEY_equal
-			});
+		//~ });
 		item_input.add(input);
 		function add_timer (){
-			let text = '  倒计时还剩余xxxx分钟，目标：'+ input.text;
+			let d = parseInt(input.text);
+			if(isNaN(d) || d < 1){return;}
+			let text = _('  倒计时还剩余 xxxx 分钟，目标：') + d;
+			//~ let text = _('  倒计时还剩余 xxxx 分钟，目标：') + input.text;
 			let item = new PopupMenu.PopupImageMenuItem(text, stock_icon.icon_name);
 			// 无法判断并提取gicon了。只能使用icon_name的stock图标？
 			item.style_class = 'large_text';
 			item.can_focus = true;
 			item.connect('button-press-event', ()=> {delete_item(item);});
+			//~ item.prototype.START = 0;
+			//~ item.prototype.END = d;
+			//~ item.text += item.START +"-x-"+ item.END;
 			that.menu.addMenuItem(item);
 		}
 		function delete_item(item){
-			//
+			//~ const GLib = imports.gi.GLib;
+			//~ let stuff = GLib.spawn_command_line_sync("zenity --question xxx; echo $?")[1].toString();	//能卡死shell
+			//~ log(stuff);
+			item.destroy();
 			// clipboard-indicator 自己带的一个 confirmDialog.js
-			//~ ExtensionUtils.getCurrentExtension().imports.confirmDialog.openConfirmDialog('x', 'ww', '', _("Clear"), _("Cancel"), () => {
-				item.destroy();
-				//~ _about() {
-        //~ let aboutDialog = new Gtk.AboutDialog({
-            //~ authors: ['Giovanni Campagna <gcampagna@src.gnome.org>'],
-            //~ translator_credits: _("translator-credits"),
-            //~ program_name: _("JS Application"),
-            //~ comments: _("Demo JS Application and template"),
-            //~ copyright: 'Copyright 2013 The gjs developers',
-            //~ license_type: Gtk.License.GPL_2_0,
-            //~ logo_icon_name: 'com.example.Gtk.JSApplication',
-            //~ version: pkg.version,
-            //~ website: 'http://www.example.com/gtk-js-app/',
-            //~ wrap_license: true,
-            //~ modal: true,
-            //~ transient_for: this,
-        //~ });
-
-        //~ aboutDialog.show();
-        //~ aboutDialog.connect('response', function () {
-            //~ aboutDialog.destroy();
-        //~ });
-    //~ }
-			//~ })
 		}
 		this.menu.addMenuItem(item_input);
 //~ -------------------- 分割栏以下为定时列表 -------------------
 		this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-// In progress item
-		//~ add_timer('99999');
-		//~ var list = new Object({current: 0, total: 5, str: '5'});
-		//~ var list = new Object({current: 0, total: 105, str: '5:30'});
-		//~ var run = new Array();
-		//~ this.menu.addMenuItem(add_timer('2'));
-		//~ this.menu.addMenuItem(add_timer('2sw'));
-		//~ this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-		//~ let item9 = new PopupMenu.PopupMenuItem("𝕖𝕖𝕩𝕡𝕤𝕤@𝕘𝕞𝕒𝕚𝕝.𝕔𝕠𝕞");
-		//~ this.menu.addMenuItem(item9);
+		//~ let item_sign = new PopupMenu.PopupMenuItem("𝕖𝕖𝕩𝕡𝕤𝕤@𝕘𝕞𝕒𝕚𝕝.𝕔𝕠𝕞");
+		//~ this.menu.addMenuItem(item_sign);
 //~ ---------------------------------------------------------
-//~ ---------------------------------------------------------
-		let area = new St.DrawingArea({ width: 500,	height: 100	});
-
-		area.connect('repaint', ondraw(area));
-
-		let item_cairo = new PopupMenu.PopupMenuItem('');
-		item_cairo.actor.add_child(area);
-		//~ this.menu.addMenuItem(item_cairo);
-
-		function ondraw(area){
-			return function() {
-				// Get the cairo context
-				let cr = area.get_context();
-				// Do some drawing with cairo
-				cr.set_font_size(64);
-				cr.set_source_rgba (1, 0, 0, 1);
-				cr.move_to(10,10);
-				cr.show_text('Samole');
-				cr.move_to(30,40);
-				cr.arc(0,0,50,0,2*Math.PI);
-				cr.fill();
-				area.queue_repaint();
-				// Explicitly tell Cairo to free the context memory
-				cr.$dispose();
-			}
-		}
 	}
 });
 //~ ---------------------------------------------------------

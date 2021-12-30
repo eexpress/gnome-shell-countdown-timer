@@ -17,6 +17,7 @@ const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 const msg = Main.notify;
+//~ const MessageTray = imports.ui.messageTray;
 
 	let sourceId = null;
 	const list = [];
@@ -61,7 +62,8 @@ class Indicator extends PanelMenu.Button {
 			primary_icon: new St.Icon({ gicon: local_icon("countdown-symbolic.svg") }),
 			secondary_icon: new St.Icon({ gicon: local_icon("stopwatch-symbolic.svg") }),
 			can_focus: true,
-			hint_text: _('输入 数字 按分钟延时，或 HH:MM 格式定时，回车生效。'),
+			//~ hint_text: _('输入 数字 按分钟延时，或 HH:MM 格式定时，回车生效。'),
+			hint_text: _('Input DIGIT to countdown, or HH:MM to set timer. Then press ENTER.'),
 			track_hover: true,
 			x_expand: true,
 		});
@@ -75,10 +77,12 @@ class Indicator extends PanelMenu.Button {
 		function add_timer (){
 			const d = Number.parseInt(input.text);
 			if (Number.isNaN(d) || d < 1) return;
-			let text = _('  倒计时还剩余 ') + d + _(' 分钟，目标：') + d;
-			const item = new PopupMenu.PopupImageMenuItem(text, stock_icon.icon_name);
+			const item = new PopupMenu.PopupImageMenuItem('xx', stock_icon.icon_name);
 			item.count = d;
-			item.left = d;
+			item.left = d*60;
+			//~ item.label.text = _('  倒计时还剩余 ') + item.count + _(' 分钟，目标：') + item.count;
+			item.label.text = _('  Countdown left ') + item.count + _(', Target: ') + item.count+_(' minutes.');
+
 			// 无法判断并提取gicon了。只能使用icon_name的stock图标？
 			item.style_class = 'large_text';
 			item.can_focus = true;
@@ -98,6 +102,9 @@ class Indicator extends PanelMenu.Button {
 	}
 });
 //~ ---------------------------------------------------------
+ //~ 🄌 U+24FF U+1F10C ❶ U+2776 ❾ U+277E
+ //~ 𝟘 U+1D7D8 𝟙 U+1D7D9 𝟡 U+1D7E1
+ //~ 𝟙𝟚𝟛𝟜𝟝𝟞𝟟𝟠𝟡𝟘
 //~ http://textconverter.net/
 //~ 🅰🅱🅲🅳🅴🅵🅶🅷🅸🅹🅺🅻🅼🅽🅾🅿🆀🆁🆂🆃🆄🆅🆆🆇🆈🆉 ❿⓫⓬⓭⓮⓯⓰⓱⓲⓳⓴
 //~ 🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩 ⓿❶❷❸❹❺❻❼❽❾
@@ -114,14 +121,40 @@ class Extension {
 	enable() {
 		this._indicator = new Indicator();
 		Main.panel.addToStatusArea(this._uuid, this._indicator);
-		sourceId = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 5, () => {
-			log("======"+list.length+"======");
-			list.forEach((i)=>{
-				log(i.text +': '+ i.count+' <--- '+i.left);
-			})
-			return GLib.SOURCE_CONTINUE;	//true
-			//~ return GLib.SOURCE_REMOVE;		//false
+//~ function notify(msg, details, icon) {
+    //~ let source = new MessageTray.Source("MyApp Information", icon);
+    //~ Main.messageTray.add(source);
+    //~ let notification = new MessageTray.Notification(source, msg, details);
+    //~ notification.setTransient(true);
+    //~ source.notify(notification);
+//~ }
+//~ let notification = new MessageTray.Notification(source, msg, details, {gicon: my_g_icon});
+		sourceId = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 2, () => {
+			for (const item of list){
+			//~ list.forEach((item)=>{})
+				//~ log(`${item.label.text}: ${item.count} <--- ${item.left}`);
+				item.left-=10;
+				const m = Math.floor(item.left/60);
+				const s = Math.floor(item.left%60);
+				item.label.text = _('  Countdown left ') + numbers(m+"'"+s) + _(', Target: ') + item.count+_(' minutes.');
+				//~ item.label.text = _('  Countdown left ') + m+"'"+s + _(', Target: ') + item.count+_(' minutes.');
+				if(item.left <= 0){
+					msg(_("Time is UP"), numbers(item.count.toString()),item._icon.icon_name);
+					//需要调用当前图标来显示。item._icon.icon_name
+					//~ notify("MyApp", "Test", 'folder-symbolic');
+					list.splice(list.indexOf(item), 1);
+					item.destroy();
+				}
+			}
+			return GLib.SOURCE_CONTINUE;	//true GLib.SOURCE_REMOVE==>false
 		});
+		function numbers(str){
+			const n = "⓿❶❷❸❹❺❻❼❽❾";
+			for(let i = 0; i<10; i++){
+				str = str.replace(new RegExp(i.toString(),'g'),n.substr(i,1));
+			}
+			return str;
+		};
 	}
 
 	disable() {

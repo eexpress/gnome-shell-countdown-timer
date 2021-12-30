@@ -171,7 +171,7 @@ class Extension {
 		//~ source.notify(notification);
 	//~ }
 	//~ let notification = new MessageTray.Notification(source, msg, details, {gicon: my_g_icon});
-		sourceId = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 2, () => {
+		sourceId = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 10, () => {
 			for (const item of list){ 	//~ list.forEach((item)=>{})
 				item.secondLeft-=10;
 				updatelabel(item);

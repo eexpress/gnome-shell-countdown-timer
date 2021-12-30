@@ -1,7 +1,9 @@
 {
-  "name": "Countdown-Timer",
+  "name": "Countdown & Timer",
   "description": "CountDown / Timer",
   "uuid": "countdown-timer@eexpss.gmail.com",
+  "version": 1,
+  "url": "https://github.com/eexpress/gnome-shell-countdown-timer/",
   "shell-version": [
     "40"
   ]

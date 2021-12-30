@@ -51,7 +51,7 @@ class Indicator extends PanelMenu.Button {
 //~ ---------------------------------------------------------
 		function local_icon(str){
 			return Gio.icon_new_for_string(
-			ExtensionUtils.getCurrentExtension().path+"/"+str);
+			ExtensionUtils.getCurrentExtension().path+"/img/"+str);
 		}
 //~ ------------------- 第二行输入栏 --------------------------
 		let item_input = new PopupMenu.PopupBaseMenuItem({

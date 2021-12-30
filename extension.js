@@ -18,8 +18,8 @@ const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 const msg = Main.notify;
 
-	var list = new Array();
 	let sourceId = null;
+	const list = [];
 
 const Indicator = GObject.registerClass(
 class Indicator extends PanelMenu.Button {
@@ -65,53 +65,30 @@ class Indicator extends PanelMenu.Button {
 			track_hover: true,
 			x_expand: true,
 		});
+		// 需要限制输入的字符：数字和冒号
 		input.connect('primary-icon-clicked', ()=>{add_timer();});
 		input.connect('secondary-icon-clicked', ()=>{add_timer();});
 		input.clutter_text.connect('activate', (actor) => { add_timer(); });
-		//~ input.connect('primary-icon-clicked', add_timer());
-		//~ input.connect('secondary-icon-clicked', add_timer());
-		//~ input.clutter_text.connect('activate', add_timer());
 		item_input.add(input);
 		this.menu.addMenuItem(item_input);
-		//~ input.connect('key-press-event', (self, event)=>{
-			//~ let [success, keyval] = event.get_keyval();
-			//~ let keyname = Gdk.keyval_name(keyval);
-			//~ if (keyname === "Control_L"){add_timer();}
-			//~ const symbol = event.get_key_symbol();
-			//~ if (symbol === Clutter.KEY_KP_Enter) {add_timer(); return true;}
-			//~ if (event.get_key_symbol() === Clutter.KEY_Enter){add_timer();}
-			//~ if(event.keyval == Clutter.KEY_Enter){add_timer();} Clutter.KEY_Escape KEY_ISO_Enter KEY_KP_Enter KEY_3270_Enter KEY_equal
-		//~ });
 //~ ---------------------------------------------------------
 		function add_timer (){
-			//~ return function(){
-			let d = parseInt(input.text);
-			if(isNaN(d) || d < 1){return;}
+			const d = Number.parseInt(input.text);
+			if (Number.isNaN(d) || d < 1) return;
 			let text = _('  倒计时还剩余 ') + d + _(' 分钟，目标：') + d;
-			//~ let text = _('  倒计时还剩余 xxxx 分钟，目标：') + input.text;
-			PopupMenu.PopupImageMenuItem.prototype.count = d;
-			PopupMenu.PopupImageMenuItem.prototype.left = d;
-			let item = new PopupMenu.PopupImageMenuItem(text, stock_icon.icon_name);
+			const item = new PopupMenu.PopupImageMenuItem(text, stock_icon.icon_name);
+			item.count = d;
+			item.left = d;
 			// 无法判断并提取gicon了。只能使用icon_name的stock图标？
 			item.style_class = 'large_text';
 			item.can_focus = true;
-			item.connect('activate', ()=> {delete_item(item);});
-			input.text = '';
+			item.connect('activate', (actor) => {
+				list.splice(list.indexOf(actor), 1);
+				actor.destroy();
+			});
 			that.menu.addMenuItem(item);
-			//~ log(item.left);
 			list.push(item);
-				var i = item;	log(i.count+' <====== '+i.left);
-			//~ }
-		}
-		function delete_item(item){
-			//~ const GLib = imports.gi.GLib;
-			//~ let stuff = GLib.spawn_command_line_sync("zenity --question xxx; echo $?")[1].toString();	//能卡死shell
-			//~ log(stuff);
-			list.forEach((i,index,arr)=>{
-				if(i === item){arr.splice(index,1);}
-			})
-			item.destroy();
-			// clipboard-indicator 自己带的一个 confirmDialog.js
+			input.text = '';
 		}
 //~ -------------------- 分割栏以下为定时列表 -------------------
 		this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());

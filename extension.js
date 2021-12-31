@@ -154,12 +154,13 @@ class Indicator extends PanelMenu.Button {
 		};
 //~ ---------------------------------------------------------
 const MessageTray = imports.ui.messageTray;
-function mmmsg(icon, title, text) {
+function mmmsg(icon, title, text) {	//支持本地图标
     let source = new MessageTray.Source('Countdown & Timer', icon);
     Main.messageTray.add(source);
     let params = {};
-	//~ let params = {bannerMarkup: true, gicon: local_gicon("stopwatch-symbolic.svg")};
-// 使用 gicon 可以覆盖 icon
+    if(icon.substr(0, 5) === "file:"){	// 使用 gicon 可以覆盖 icon
+		params = {bannerMarkup: true, gicon: local_gicon(icon.substr(5))};
+	}
     let notif = new MessageTray.Notification(source, title, text, params);
 	notif.setUrgency(MessageTray.Urgency.CRITICAL);	// 一直显示
     source.showNotification(notif);
@@ -182,7 +183,7 @@ class Extension {
 				if(item.secondLeft <= 0){
 //~ const msg = Main.notify;	// 不能设置图标和警告级别等。
 //~ msg(_("Time is UP"), digit2unicode(item.TargetStr.toString()),item._icon.icon_name);
-					mmmsg(item._icon.icon_name, _("Time is UP"), digit2unicode(item.TargetStr.toString()));
+					mmmsg((!item._icon.icon_name)?'file:stopwatch-symbolic.svg':item._icon.icon_name, _("Time is UP"), digit2unicode(item.TargetStr.toString()));
 					//~ notify("MyApp", "Test", 'folder-symbolic');
 					list.splice(list.indexOf(item), 1);
 					item.destroy();

@@ -14,7 +14,6 @@
 
 ![](screenshot1.png)
 
-extensions.gnome.org 都不知道如何操作。反正传乱了。url都对不上名称。
 
 ```
 ⭕ tree

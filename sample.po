@@ -1,4 +1,5 @@
-# Chinese translations for PACKAGE package.
+# Chinese translations for PACKAGE package
+# PACKAGE 软件包的简体中文翻译.
 # Copyright (C) 2021 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # eexpss <eexpss@gmail.com>, 2021.
@@ -7,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-30 19:18+0800\n"
-"PO-Revision-Date: 2021-12-30 19:37+0800\n"
+"POT-Creation-Date: 2021-12-31 15:50+0800\n"
+"PO-Revision-Date: 2021-12-31 15:52+0800\n"
 "Last-Translator: eexpss <eexpss@gmail.com>\n"
 "Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -16,30 +17,28 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: extension.js:29
+#: extension.js:27
 msgid "Countdown Indicator"
 msgstr "倒计时器"
 
-#: extension.js:66
+#: extension.js:60
 msgid "Input DIGIT to countdown, or HH:MM to set timer. Then press ENTER."
 msgstr "输入 数字 按分钟延时，或 HH:MM 格式定时，回车生效。"
 
-#: extension.js:102
+#: extension.js:97
 msgid " minutes"
 msgstr " 分钟"
 
 #: extension.js:143
-msgid "  Countdown left "
-msgstr "  倒计时还剩下 "
+#, javascript-format
+msgid "  Countdown left %s, Target: %s."
+msgstr "  倒计时还剩下 %s，目标： %s。"
 
-#: extension.js:143 extension.js:145
-msgid ", Target: "
-msgstr "，目标： "
+#: extension.js:146
+#, javascript-format
+msgid "  Timer left %s, Target: %s."
+msgstr "  定时器还剩下 %s，目标： %s。"
 
-#: extension.js:145
-msgid "  Timer left "
-msgstr "  定时器还剩下 "
-
-#: extension.js:179
+#: extension.js:189
 msgid "Time is UP"
 msgstr "时间到，开口笑。"

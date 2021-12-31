@@ -16,8 +16,6 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
-const msg = Main.notify;
-//~ const MessageTray = imports.ui.messageTray;
 
 	let sourceId = null;
 	const list = [];
@@ -44,23 +42,19 @@ class Indicator extends PanelMenu.Button {
 		function set_icon(icon, str){
 		// 使用本地图标文件'file:stopwatch-symbolic.svg'，PopupImageMenuItem 无法设置gicon了。
 			if(str.substr(0, 5) == "file:"){
-				icon.gicon = local_icon(str.substr(5));
+				icon.gicon = local_gicon(str.substr(5));
 			} else { icon.icon_name = str; }
 		}
 		this.menu.addMenuItem(item_icons);
 //~ ---------------------------------------------------------
-		function local_icon(str){
-			return Gio.icon_new_for_string(
-			ExtensionUtils.getCurrentExtension().path+"/img/"+str);
-		}
 //~ ------------------- 第二行输入栏 --------------------------
 		let item_input = new PopupMenu.PopupBaseMenuItem({
                 reactive: false, can_focus: false });
 		let input = new St.Entry({
 			name: 'searchEntry',
 			style_class: 'big_text',
-			primary_icon: new St.Icon({ gicon: local_icon("countdown-symbolic.svg") }),
-			secondary_icon: new St.Icon({ gicon: local_icon("stopwatch-symbolic.svg") }),
+			primary_icon: new St.Icon({ gicon: local_gicon("countdown-symbolic.svg") }),
+			secondary_icon: new St.Icon({ gicon: local_gicon("stopwatch-symbolic.svg") }),
 			can_focus: true,
 			//~ hint_text: _('输入 数字 按分钟延时，或 HH:MM 格式定时，回车生效。'),
 			hint_text: _('Input DIGIT to countdown, or HH:MM to set timer. Then press ENTER.'),
@@ -136,14 +130,18 @@ class Indicator extends PanelMenu.Button {
 //~ 🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩 ⓿❶❷❸❹❺❻❼❽❾
 //~ 𝒆𝒆𝒙𝒑𝒔𝒔@𝒈𝒎𝒂𝒊𝒍.𝒄𝒐𝒎 🅴🅴🆇🅿🆂🆂@🅶🅼🅰🅸🅻.🅲🅾🅼 🅔🅔🅧🅟🅢🅢@🅖🅜🅐🅘🅛.🅒🅞🅜
 //~ 🅲🅾🆄🅽🆃🅳🅾🆆🅽 / 🆃🅸🅼🅴🆁 𝕖𝕖𝕩𝕡𝕤𝕤@𝕘𝕞𝕒𝕚𝕝.𝕔𝕠𝕞
+		function local_gicon(str){
+			return Gio.icon_new_for_string(
+			ExtensionUtils.getCurrentExtension().path+"/img/"+str);
+		}
 		function updatelabel(item){
 			const m = Math.floor(item.secondLeft/60);
 			const s = Math.floor(item.secondLeft%60);
 			const ss = (s==0) ? '00' : s.toString();
 			if(item.type){
-				item.label.text = _('  Countdown left ') + digit2unicode(m+"'"+ss) + _(', Target: ') + item.TargetStr + '.';
+				item.label.text = _('  Countdown left %s, Target: %s.').format(digit2unicode(m+"'"+ss), item.TargetStr);
 			}else{
-				item.label.text = _('  Timer left ') + digit2unicode(m+"'"+ss) + _(', Target: ') + item.TargetStr + '.';
+				item.label.text = _('  Timer left %s, Target: %s.').format(digit2unicode(m+"'"+ss), item.TargetStr);
 			}
 		};
 
@@ -155,6 +153,18 @@ class Indicator extends PanelMenu.Button {
 			return str;
 		};
 //~ ---------------------------------------------------------
+const MessageTray = imports.ui.messageTray;
+function mmmsg(icon, title, text) {
+    let source = new MessageTray.Source('Countdown & Timer', icon);
+    Main.messageTray.add(source);
+    let params = {};
+	//~ let params = {bannerMarkup: true, gicon: local_gicon("stopwatch-symbolic.svg")};
+// 使用 gicon 可以覆盖 icon
+    let notif = new MessageTray.Notification(source, title, text, params);
+	notif.setUrgency(MessageTray.Urgency.CRITICAL);	// 一直显示
+    source.showNotification(notif);
+}
+//~ ---------------------------------------------------------
 class Extension {
 	constructor(uuid) {
 		this._uuid = uuid;
@@ -164,21 +174,15 @@ class Extension {
 	enable() {
 		this._indicator = new Indicator();
 		Main.panel.addToStatusArea(this._uuid, this._indicator);
-	//~ function notify(msg, details, icon) {
-		//~ let source = new MessageTray.Source("MyApp Information", icon);
-		//~ Main.messageTray.add(source);
-		//~ let notification = new MessageTray.Notification(source, msg, details);
-		//~ notification.setTransient(true);
-		//~ source.notify(notification);
-	//~ }
-	//~ let notification = new MessageTray.Notification(source, msg, details, {gicon: my_g_icon});
+
 		sourceId = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 10, () => {
 			for (const item of list){ 	//~ list.forEach((item)=>{})
 				item.secondLeft-=10;
 				updatelabel(item);
 				if(item.secondLeft <= 0){
-					msg(_("Time is UP"), digit2unicode(item.TargetStr.toString()),item._icon.icon_name);
-//需要调用当前图标来显示。item._icon.icon_name
+//~ const msg = Main.notify;	// 不能设置图标和警告级别等。
+//~ msg(_("Time is UP"), digit2unicode(item.TargetStr.toString()),item._icon.icon_name);
+					mmmsg(item._icon.icon_name, _("Time is UP"), digit2unicode(item.TargetStr.toString()));
 					//~ notify("MyApp", "Test", 'folder-symbolic');
 					list.splice(list.indexOf(item), 1);
 					item.destroy();

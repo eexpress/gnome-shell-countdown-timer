@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-30 19:18+0800\n"
+"POT-Creation-Date: 2021-12-31 15:50+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,30 +17,28 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: extension.js:29
+#: extension.js:27
 msgid "Countdown Indicator"
 msgstr ""
 
-#: extension.js:66
+#: extension.js:60
 msgid "Input DIGIT to countdown, or HH:MM to set timer. Then press ENTER."
 msgstr ""
 
-#: extension.js:102
+#: extension.js:97
 msgid " minutes"
 msgstr ""
 
 #: extension.js:143
-msgid "  Countdown left "
+#, javascript-format
+msgid "  Countdown left %s, Target: %s."
 msgstr ""
 
-#: extension.js:143 extension.js:145
-msgid ", Target: "
+#: extension.js:146
+#, javascript-format
+msgid "  Timer left %s, Target: %s."
 msgstr ""
 
-#: extension.js:145
-msgid "  Timer left "
-msgstr ""
-
-#: extension.js:179
+#: extension.js:189
 msgid "Time is UP"
 msgstr ""

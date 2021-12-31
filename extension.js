@@ -2,9 +2,8 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
+//~ 🅲🅾🆄🅽🆃🅳🅾🆆🅽 / 🆃🅸🅼🅴🆁 𝕖𝕖𝕩𝕡𝕤𝕤@𝕘𝕞𝕒𝕚𝕝.𝕔𝕠𝕞
 //~ const Cairo = imports.cairo;
-//~ const Mainloop = imports.mainloop;
-//~ Mainloop.timeout_add(3000, function () { text.destroy(); });
 
 imports.gi.versions.Gtk = '3.0';	//GLib need version.
 
@@ -25,25 +24,25 @@ class Indicator extends PanelMenu.Button {
 	_init() {
 		var that = this;	// 想缓存，在闭包中，代替调用this。
 		super._init(0.0, _('Countdown Indicator'));
+		let last_gicon = '';
 //~ -------------------  面板主图标 ---------------------------
 		var stock_icon = new St.Icon({ icon_name: 'alarm-symbolic', icon_size: 30 });
 		this.add_child(stock_icon);
 //~ ----------------  第一行可选图标组 -------------------------
 		let item_icons = new PopupMenu.PopupMenuItem('');
-		['alarm-symbolic','call-start-symbolic','go-home-symbolic','media-view-subtitles-symbolic','airplane-mode-symbolic','system-users-symbolic','applications-games-symbolic','emoji-food-symbolic','face-devilish-symbolic','emblem-favorite-symbolic','file:stopwatch-symbolic.svg'].forEach(showicon);
+		['alarm-symbolic','call-start-symbolic','go-home-symbolic','media-view-subtitles-symbolic','airplane-mode-symbolic','system-users-symbolic','applications-games-symbolic','emoji-food-symbolic','face-devilish-symbolic','emblem-favorite-symbolic','file:stopwatch-symbolic.svg','file:countdown-symbolic.svg','file:timer-symbolic.svg'].forEach(showicon);
 		function showicon(item){
 			let icon = new St.Icon({ style_class: 'iconlist' });
 			set_icon(icon, item);	// icon 不能直接 button-press-event ？？？
-			//~ St.Icon Signals Inherited: Clutter.Container (3), GObject.Object (1), Clutter.Actor (25), St.Widget (2)
 			let butt = new St.Button({ can_focus: true, child: icon });
 			butt.connect('button-press-event', () => { set_icon(stock_icon, item); });
 			item_icons.actor.add_child(butt);
 		};
 		function set_icon(icon, str){
-		// 使用本地图标文件'file:stopwatch-symbolic.svg'，PopupImageMenuItem 无法设置gicon了。
 			if(str.substr(0, 5) == "file:"){
-				icon.gicon = local_gicon(str.substr(5));
-			} else { icon.icon_name = str; }
+				last_gicon = str.substr(5);
+				icon.gicon = local_gicon(last_gicon);
+			} else { icon.icon_name = str; last_gicon = ''; }
 		}
 		this.menu.addMenuItem(item_icons);
 //~ ---------------------------------------------------------
@@ -73,8 +72,6 @@ class Indicator extends PanelMenu.Button {
 			let m = 0;
 			let isCntDwn = false;
 			if(/\d{1,2}:\d{1,2}/.test(s)){	// HH:MM Timer
-				//~ const unixTime = Date.parse(input.text);
-				//~ if(unixTime == NaN) return;
 				let hhmm = s.match(/(\d{1,2}):(\d{1,2})/);
 				let h1 = parseInt(hhmm[1]);
 				const m1 = parseInt(hhmm[2]);
@@ -84,11 +81,9 @@ class Indicator extends PanelMenu.Button {
 				if(h1<h0){h1+=12;}else{
 					if(h1==h0 && m1<=m0){h1+=12;}
 				}
-				//~ log(`${s} :  <${hhmm}> : <${h1}>:<${m1}> -- ${h0}:${m0}`);
 				if(h1<h0){h1+=12;}else{
 					if(h1==h0 && m1<=m0){h1+=12;}
 				}
-				//~ log(`${s} :  <${hhmm}> : <${h1}>:<${m1}> -- ${h0}:${m0}`);
 				m = (h1-h0)*60+m1-m0;
 				s = input.text;
 			}else{	// Countdown by Minutes
@@ -99,11 +94,15 @@ class Indicator extends PanelMenu.Button {
 			}
 
 			const item = new PopupMenu.PopupImageMenuItem('xx', stock_icon.icon_name);
+			if(last_gicon){
+				item.setIcon(local_gicon(last_gicon));
+				item.Gicon = 'file:'+last_gicon;
+			}else item.Gicon = stock_icon.icon_name;
+			// 增加3个参数
 			item.TargetStr = s;
 			item.secondLeft = m*60;
-			item.type = isCntDwn;
-			updatelabel(item);
-			// 无法判断并提取gicon了。只能使用icon_name的stock图标？
+
+			updatelabel(item);	// 立刻刷新label。否则会显示出xx。
 			item.style_class = 'large_text';
 			item.can_focus = true;
 			item.connect('activate', (actor) => {
@@ -116,20 +115,9 @@ class Indicator extends PanelMenu.Button {
 		}
 //~ -------------------- 分割栏以下为定时列表 -------------------
 		this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-		//~ let item_sign = new PopupMenu.PopupMenuItem("𝕖𝕖𝕩𝕡𝕤𝕤@𝕘𝕞𝕒𝕚𝕝.𝕔𝕠𝕞"); this.menu.addMenuItem(item_sign);
-//~ ---------------------------------------------------------
-//~ ---------------------------------------------------------
 	}
 });
 //~ ---------------------------------------------------------
- //~ 🄌 U+24FF U+1F10C ❶ U+2776 ❾ U+277E
- //~ 𝟘 U+1D7D8 𝟙 U+1D7D9 𝟡 U+1D7E1
- //~ 𝟙𝟚𝟛𝟜𝟝𝟞𝟟𝟠𝟡𝟘
-//~ http://textconverter.net/
-//~ 🅰🅱🅲🅳🅴🅵🅶🅷🅸🅹🅺🅻🅼🅽🅾🅿🆀🆁🆂🆃🆄🆅🆆🆇🆈🆉 ❿⓫⓬⓭⓮⓯⓰⓱⓲⓳⓴
-//~ 🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩 ⓿❶❷❸❹❺❻❼❽❾
-//~ 𝒆𝒆𝒙𝒑𝒔𝒔@𝒈𝒎𝒂𝒊𝒍.𝒄𝒐𝒎 🅴🅴🆇🅿🆂🆂@🅶🅼🅰🅸🅻.🅲🅾🅼 🅔🅔🅧🅟🅢🅢@🅖🅜🅐🅘🅛.🅒🅞🅜
-//~ 🅲🅾🆄🅽🆃🅳🅾🆆🅽 / 🆃🅸🅼🅴🆁 𝕖𝕖𝕩𝕡𝕤𝕤@𝕘𝕞𝕒𝕚𝕝.𝕔𝕠𝕞
 		function local_gicon(str){
 			return Gio.icon_new_for_string(
 			ExtensionUtils.getCurrentExtension().path+"/img/"+str);
@@ -181,10 +169,7 @@ class Extension {
 				item.secondLeft-=10;
 				updatelabel(item);
 				if(item.secondLeft <= 0){
-//~ const msg = Main.notify;	// 不能设置图标和警告级别等。
-//~ msg(_("Time is UP"), digit2unicode(item.TargetStr.toString()),item._icon.icon_name);
-					mmmsg((!item._icon.icon_name)?'file:stopwatch-symbolic.svg':item._icon.icon_name, _("Time is UP"), digit2unicode(item.TargetStr.toString()));
-					//~ notify("MyApp", "Test", 'folder-symbolic');
+					mmmsg(item.Gicon, _("Time is UP"), digit2unicode(item.TargetStr.toString()));
 					list.splice(list.indexOf(item), 1);
 					item.destroy();
 				}

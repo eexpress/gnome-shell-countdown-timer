@@ -90,6 +90,7 @@ class Indicator extends PanelMenu.Button {
 				if(h1<h0){h1+=12;}else{
 					if(h1==h0 && m1<=m0){h1+=12;}
 				}
+				//~ log(`${s} :  <${hhmm}> : <${h1}>:<${m1}> -- ${h0}:${m0}`);
 				if(h1<h0){h1+=12;}else{
 					if(h1==h0 && m1<=m0){h1+=12;}
 				}

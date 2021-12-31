@@ -8,7 +8,7 @@
 
 imports.gi.versions.Gtk = '3.0';	//GLib need version.
 
-const GETTEXT_DOMAIN = 'countdown-indicator-extension';
+const GETTEXT_DOMAIN = 'countdown-timer';	//这行说指向翻译的 mo 文件名的关键
 const _ = imports.gettext.domain(GETTEXT_DOMAIN).gettext;
 
 const { GObject, GLib, Gio, Clutter, St } = imports.gi;

@@ -4,8 +4,7 @@
 
 //~ 🅲🅾🆄🅽🆃🅳🅾🆆🅽 / 🆃🅸🅼🅴🆁 𝕖𝕖𝕩𝕡𝕤𝕤@𝕘𝕞𝕒𝕚𝕝.𝕔𝕠𝕞
 //~ const Cairo = imports.cairo;
-
-imports.gi.versions.Gtk = '3.0';	//GLib need version.
+//~ ⭕ cp ~/project/gnome-shell-countdown-timer/extension.js ~/.local/share/gnome-shell/extensions/countdown-timer@eexpss.gmail.com/; killall -3 gnome-shell
 
 const GETTEXT_DOMAIN = 'countdown-timer';	//这行说指向翻译的 mo 文件名的关键
 const _ = imports.gettext.domain(GETTEXT_DOMAIN).gettext;
@@ -172,6 +171,11 @@ class Extension {
 					mmmsg(item.Gicon, _("Time is UP"), digit2unicode(item.TargetStr.toString()));
 					list.splice(list.indexOf(item), 1);
 					item.destroy();
+// -------------------------------------------
+					try {	// Gio.Subprocess fail excute
+						GLib.spawn_command_line_async('canberra-gtk-play -l 3 -i complete');
+					} catch (e) { logError(e); }
+// -------------------------------------------
 				}
 			}
 			return GLib.SOURCE_CONTINUE;	//true GLib.SOURCE_REMOVE==>false

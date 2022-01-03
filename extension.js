@@ -15,7 +15,7 @@ const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 
-	let sourceId = null;
+	let timeoutId = null;
 	const list = [];
 
 const Indicator = GObject.registerClass(
@@ -93,7 +93,7 @@ class Indicator extends PanelMenu.Button {
 			}
 
 			const item = new PopupMenu.PopupImageMenuItem('xx', stock_icon.icon_name);
-			if(last_gicon){
+			if(!stock_icon.icon_name && last_gicon){
 				item.setIcon(local_gicon(last_gicon));
 				item.Gicon = 'file:'+last_gicon;
 			}else item.Gicon = stock_icon.icon_name;
@@ -139,10 +139,14 @@ class Indicator extends PanelMenu.Button {
 			}
 			return str;
 		};
+
 //~ ---------------------------------------------------------
+//~ https://github.com/GNOME/gnome-shell/blob/main/js/ui/messageTray.js
+let notify_on = false;
 const MessageTray = imports.ui.messageTray;
 function mmmsg(icon, title, text) {	//支持本地图标
     let source = new MessageTray.Source('Countdown & Timer', icon);
+    source.connect('destroy', () => notify_on = false);
     Main.messageTray.add(source);
     let params = {};
     if(icon.substr(0, 5) === "file:"){	// 使用 gicon 可以覆盖 icon
@@ -150,6 +154,7 @@ function mmmsg(icon, title, text) {	//支持本地图标
 	}
     let notif = new MessageTray.Notification(source, title, text, params);
 	notif.setUrgency(MessageTray.Urgency.CRITICAL);	// 一直显示
+	notify_on = true;
     source.showNotification(notif);
 }
 //~ ---------------------------------------------------------
@@ -162,8 +167,12 @@ class Extension {
 	enable() {
 		this._indicator = new Indicator();
 		Main.panel.addToStatusArea(this._uuid, this._indicator);
-
-		sourceId = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 10, () => {
+		timeoutId = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 10, () => {
+			if(notify_on){	//Meta.SoundPlayer
+				let player = global.display.get_sound_player();
+				player.play_from_theme('complete', 'countdown', null);
+			}
+// -------------------------------------------
 			for (const item of list){ 	//~ list.forEach((item)=>{})
 				item.secondLeft-=10;
 				updatelabel(item);
@@ -171,10 +180,7 @@ class Extension {
 					mmmsg(item.Gicon, _("Time is UP"), digit2unicode(item.TargetStr.toString()));
 					list.splice(list.indexOf(item), 1);
 					item.destroy();
-// -------------------------------------------
-					try {	// Gio.Subprocess fail excute
-						GLib.spawn_command_line_async('canberra-gtk-play -l 3 -i complete');
-					} catch (e) { logError(e); }
+					//~ GLib.spawn_command_line_async('canberra-gtk-play -l 3 -i complete');
 // -------------------------------------------
 				}
 			}
@@ -185,9 +191,9 @@ class Extension {
 	disable() {
 		this._indicator.destroy();
 		this._indicator = null;
-		if (sourceId) {
-			GLib.Source.remove(sourceId);
-			sourceId = null;
+		if (timeoutId) {
+			GLib.Source.remove(timeoutId);
+			timeoutId = null;
 		}
 	}
 }

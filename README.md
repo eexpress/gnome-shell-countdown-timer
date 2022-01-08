@@ -10,13 +10,15 @@
 
 > 吐槽：资料真少，每行都靠猜。
 
+> 自动安装请在[官网](https://extensions.gnome.org/)搜索`Countdown & Timer`。
+
 ![](screenshot.png)
 
 ![](screenshot1.png)
 
 
 ```
-⭕ tree
+⭕ tree ~/.local/share/gnome-shell/extensions/countdown-timer@eexpss.gmail.com/
 .
 ├── extension.js
 ├── img

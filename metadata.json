@@ -3,7 +3,7 @@
   "description": "Countdown in minutes, or enter text containing HH:MM format to set the Timer.",
   "name": "Countdown & Timer",
   "shell-version": [
-    "40"
+    "40","41","42"
   ],
   "url": "https://github.com/eexpress/gnome-shell-countdown-timer/",
   "uuid": "countdown-timer@eexpss.gmail.com",

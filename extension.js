@@ -25,15 +25,15 @@ class Indicator extends PanelMenu.Button {
 		super._init(0.0, _('Countdown Indicator'));
 		let last_gicon = '';
 //~ -------------------  面板主图标 ---------------------------
-		var stock_icon = new St.Icon({ icon_name: 'alarm-symbolic', icon_size: 30 });
+		const stock_icon = new St.Icon({ icon_name: 'alarm-symbolic', icon_size: 30 });
 		this.add_child(stock_icon);
 //~ ----------------  第一行可选图标组 -------------------------
-		let item_icons = new PopupMenu.PopupMenuItem('');
+		const item_icons = new PopupMenu.PopupMenuItem('');
 		['alarm-symbolic','call-start-symbolic','go-home-symbolic','media-view-subtitles-symbolic','airplane-mode-symbolic','system-users-symbolic','applications-games-symbolic','emoji-food-symbolic','face-devilish-symbolic','emblem-favorite-symbolic','file:stopwatch-symbolic.svg','file:countdown-symbolic.svg','file:timer-symbolic.svg'].forEach(showicon);
 		function showicon(item){
-			let icon = new St.Icon({ style_class: 'iconlist' });
+			const icon = new St.Icon({ style_class: 'iconlist' });
 			set_icon(icon, item);	// icon 不能直接 button-press-event ？？？
-			let butt = new St.Button({ can_focus: true, child: icon });
+			const butt = new St.Button({ can_focus: true, child: icon });
 			butt.connect('button-press-event', () => { set_icon(stock_icon, item); });
 			item_icons.actor.add_child(butt);
 		};
@@ -46,9 +46,9 @@ class Indicator extends PanelMenu.Button {
 		this.menu.addMenuItem(item_icons);
 //~ ---------------------------------------------------------
 //~ ------------------- 第二行输入栏 --------------------------
-		let item_input = new PopupMenu.PopupBaseMenuItem({
+		const item_input = new PopupMenu.PopupBaseMenuItem({
                 reactive: false, can_focus: false });
-		let input = new St.Entry({
+		const input = new St.Entry({
 			name: 'searchEntry',
 			style_class: 'big_text',
 			primary_icon: new St.Icon({ gicon: local_gicon("countdown-symbolic.svg") }),
@@ -71,7 +71,7 @@ class Indicator extends PanelMenu.Button {
 			let m = 0;
 			let isCntDwn = false;
 			if(/\d{1,2}:\d{1,2}/.test(s)){	// HH:MM Timer
-				let hhmm = s.match(/(\d{1,2}):(\d{1,2})/);
+				const hhmm = s.match(/(\d{1,2}):(\d{1,2})/);
 				let h1 = parseInt(hhmm[1]);
 				const m1 = parseInt(hhmm[2]);
 				const d0 = new Date();
@@ -145,14 +145,14 @@ class Indicator extends PanelMenu.Button {
 let notify_on = false;
 const MessageTray = imports.ui.messageTray;
 function mmmsg(icon, title, text) {	//支持本地图标
-    let source = new MessageTray.Source('Countdown & Timer', icon);
+    const source = new MessageTray.Source('Countdown & Timer', icon);
     source.connect('destroy', () => notify_on = false);
     Main.messageTray.add(source);
     let params = {};
     if(icon.substr(0, 5) === "file:"){	// 使用 gicon 可以覆盖 icon
 		params = {bannerMarkup: true, gicon: local_gicon(icon.substr(5))};
 	}
-    let notif = new MessageTray.Notification(source, title, text, params);
+    const notif = new MessageTray.Notification(source, title, text, params);
 	notif.setUrgency(MessageTray.Urgency.CRITICAL);	// 一直显示
 	notify_on = true;
     source.showNotification(notif);
@@ -169,7 +169,7 @@ class Extension {
 		Main.panel.addToStatusArea(this._uuid, this._indicator);
 		timeoutId = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 10, () => {
 			if(notify_on){	//Meta.SoundPlayer
-				let player = global.display.get_sound_player();
+				const player = global.display.get_sound_player();
 				player.play_from_theme('complete', 'countdown', null);
 			}
 // -------------------------------------------

@@ -70,6 +70,7 @@ class Indicator extends PanelMenu.Button {
 			let s = input.text;
 			let m = 0;
 			let isCntDwn = false;
+			let s0;
 			if(/\d{1,2}:\d{1,2}/.test(s)){	// HH:MM Timer
 				const hhmm = s.match(/(\d{1,2}):(\d{1,2})/);
 				let h1 = parseInt(hhmm[1]);
@@ -77,6 +78,7 @@ class Indicator extends PanelMenu.Button {
 				const d0 = new Date();
 				const h0 = d0.getHours();
 				const m0 = d0.getMinutes();
+				s0 = d0.getSeconds();
 				if(h1<h0){h1+=12;}else{
 					if(h1==h0 && m1<=m0){h1+=12;}
 				}
@@ -100,6 +102,7 @@ class Indicator extends PanelMenu.Button {
 			// 增加3个参数
 			item.TargetStr = s;
 			item.secondLeft = m*60;
+			if(!isCntDwn) item.secondLeft -= Math.round(s0/10)*10;
 
 			updatelabel(item);	// 立刻刷新label。否则会显示出xx。
 			item.style_class = 'large_text';

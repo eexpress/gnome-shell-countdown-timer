@@ -1,12 +1,10 @@
 /* Add your custom extension styling here */
-.big_text {
+.ct-item {
     font-weight: bold;
     border-radius: 6px;
     font-size: 1.5em;
 }
 
-.large_text { margin: 0.5em; font-size: 1.5em; }
+.ct-input { margin: 0.2em; font-size: 1.5em; }
 
-.iconlist{
-	margin-right: 1em;
-}
+.ct-icon { margin-right: 0.6em; }

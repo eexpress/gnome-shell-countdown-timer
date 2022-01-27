@@ -1,10 +1,10 @@
 /* Add your custom extension styling here */
-.ct-item {
+.cdt-item {
     font-weight: bold;
     border-radius: 6px;
     font-size: 1.5em;
 }
 
-.ct-input { margin: 0.2em; font-size: 1.5em; }
+.cdt-input { margin: 0.2em; font-size: 1.5em; }
 
-.ct-icon { margin-right: 0.6em; }
+.cdt-icon { margin-right: 0.6em; }

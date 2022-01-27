@@ -31,7 +31,7 @@ class Indicator extends PanelMenu.Button {
 		const item_icons = new PopupMenu.PopupMenuItem('');
 		['alarm-symbolic','call-start-symbolic','go-home-symbolic','media-view-subtitles-symbolic','airplane-mode-symbolic','system-users-symbolic','applications-games-symbolic','emoji-food-symbolic','face-devilish-symbolic','emblem-favorite-symbolic','file:stopwatch-symbolic.svg','file:countdown-symbolic.svg','file:timer-symbolic.svg'].forEach(showicon);
 		function showicon(item){
-			const icon = new St.Icon({ style_class: 'ct-icon' });
+			const icon = new St.Icon({ style_class: 'cdt-icon' });
 			set_icon(icon, item);	// icon 不能直接 button-press-event ？？？
 			const butt = new St.Button({ can_focus: true, child: icon });
 			butt.connect('button-press-event', () => { set_icon(stock_icon, item); });
@@ -50,7 +50,7 @@ class Indicator extends PanelMenu.Button {
                 reactive: false, can_focus: false });
 		const input = new St.Entry({
 			name: 'searchEntry',
-			style_class: 'ct-input',
+			style_class: 'cdt-input',
 			primary_icon: new St.Icon({ gicon: local_gicon("countdown-symbolic.svg") }),
 			secondary_icon: new St.Icon({ gicon: local_gicon("stopwatch-symbolic.svg") }),
 			can_focus: true,
@@ -105,7 +105,7 @@ class Indicator extends PanelMenu.Button {
 			if(!isCntDwn) item.secondLeft -= Math.round(s0/10)*10;
 
 			updatelabel(item);	// 立刻刷新label。否则会显示出xx。
-			item.style_class = 'ct-item';
+			item.style_class = 'cdt-item';
 			item.can_focus = true;
 			item.connect('activate', (actor) => {
 				list.splice(list.indexOf(actor), 1);

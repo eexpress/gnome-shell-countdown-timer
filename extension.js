@@ -17,6 +17,8 @@ const PopupMenu = imports.ui.popupMenu;
 
 	let timeoutId = null;
 	const list = [];
+const Me = ExtensionUtils.getCurrentExtension();
+function lg(s){log("==="+Me.uuid.split('@')[0]+"===>"+s)};
 
 const Indicator = GObject.registerClass(
 class Indicator extends PanelMenu.Button {
@@ -170,6 +172,7 @@ class Extension {
 	enable() {
 		this._indicator = new Indicator();
 		Main.panel.addToStatusArea(this._uuid, this._indicator);
+		lg("start");
 		timeoutId = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 10, () => {
 			if(notify_on){	//Meta.SoundPlayer
 				const player = global.display.get_sound_player();

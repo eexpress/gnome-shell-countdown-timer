@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   viewBox="0 0 16 16"
+   viewBox="0 0 128 128"
    version="1.1"
    id="svg12"
-   sodipodi:docname="at-gui-symbolic.svg"
+   sodipodi:docname="countdown-symbolic.svg"
    inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   width="128"
+   height="128"
+   inkscape:export-filename="/home/eexpss/project/gnome-shell-countdown-timer/countdown-timer-128.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -20,46 +25,50 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      showgrid="false"
-     inkscape:zoom="26.09375"
-     inkscape:cx="7.6646707"
-     inkscape:cy="8.0095808"
+     inkscape:zoom="2.3063835"
+     inkscape:cx="7.8044264"
+     inkscape:cy="42.707556"
      inkscape:window-width="1920"
-     inkscape:window-height="1043"
+     inkscape:window-height="1008"
      inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:window-y="34"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg12" />
-  <path
-     d="m 13.909,1.307 -3.304,3.307 c 0.732,0.273 1.5,0.527 2.306,0.764 0.8,0.231 1.592,0.436 2.375,0.612 A 48.514,48.514 0 0 0 14.665,3.624 40.298,40.298 0 0 0 13.909,1.308 Z"
-     overflow="visible"
-     id="path2"
-     style="fill:#2e3436;fill-opacity:1" />
-  <path
-     d="m 12.756,11.656 -0.072,0.084 0.75,0.66 0.091,-0.103 0.04,-0.05 0.48,-0.72 -0.832,-0.554 z m -1.11,1.108 -0.34,0.226 0.555,0.832 0.368,-0.244 0.05,-0.039 0.422,-0.37 -0.658,-0.751 z m -1.353,0.779 -0.676,0.23 0.322,0.948 0.717,-0.246 0.06,-0.024 0.218,-0.11 -0.442,-0.896 z m -2.326,0.459 0.066,0.996 0.801,-0.053 -0.066,-0.998 z"
-     font-family="sans-serif"
-     font-weight="400"
-     overflow="visible"
-     style="font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-feature-settings:normal;text-indent:0;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;text-transform:none;text-orientation:mixed;shape-padding:0;isolation:auto;mix-blend-mode:normal;fill:#2e3436;fill-opacity:1"
-     white-space="normal"
-     id="path4" />
-  <path
-     d="M 7.574,1.014 A 6.981,6.981 0 0 0 5.227,1.572 7.005,7.005 0 0 0 1.145,9.416 7.005,7.005 0 0 0 8,15 H 8.5 V 14 H 8 A 5.996,5.996 0 0 1 2.123,9.213 5.995,5.995 0 0 1 5.623,2.49 5.995,5.995 0 0 1 12.914,4.559 l 0.287,0.41 0.82,-0.574 -0.287,-0.41 A 7.006,7.006 0 0 0 7.574,1.014 Z"
-     font-family="sans-serif"
-     font-weight="400"
-     overflow="visible"
-     style="font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-feature-settings:normal;text-indent:0;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;text-transform:none;text-orientation:mixed;shape-padding:0;isolation:auto;mix-blend-mode:normal;fill:#2e3436;fill-opacity:1"
-     white-space="normal"
-     id="path8" />
-  <path
-     style="fill:#2e3436;stroke:#f9f9f9;stroke-width:0;stroke-linecap:round;fill-opacity:1"
-     id="path855"
-     sodipodi:type="arc"
-     sodipodi:cx="8.0292339"
-     sodipodi:cy="8.0005903"
-     sodipodi:rx="5.095233"
-     sodipodi:ry="5.095233"
-     sodipodi:start="0"
-     sodipodi:end="4.1887902"
-     sodipodi:arc-type="slice"
-     d="M 13.124467,8.0005903 A 5.095233,5.095233 0 0 1 8.9140119,13.018415 5.095233,5.095233 0 0 1 3.2412811,9.7432626 5.095233,5.095233 0 0 1 5.4816174,3.5879892 l 2.5476165,4.4126011 z" />
+  <g
+     id="g828"
+     transform="matrix(8.2407111,0,0,8.2407111,-3.1076271,-1.9305562)">
+    <path
+       d="m 13.909,1.307 -3.304,3.307 c 0.732,0.273 1.5,0.527 2.306,0.764 0.8,0.231 1.592,0.436 2.375,0.612 A 48.514,48.514 0 0 0 14.665,3.624 40.298,40.298 0 0 0 13.909,1.308 Z"
+       overflow="visible"
+       id="path2"
+       style="fill:#2e3436;fill-opacity:1" />
+    <path
+       d="m 12.756,11.656 -0.072,0.084 0.75,0.66 0.091,-0.103 0.04,-0.05 0.48,-0.72 -0.832,-0.554 z m -1.11,1.108 -0.34,0.226 0.555,0.832 0.368,-0.244 0.05,-0.039 0.422,-0.37 -0.658,-0.751 z m -1.353,0.779 -0.676,0.23 0.322,0.948 0.717,-0.246 0.06,-0.024 0.218,-0.11 -0.442,-0.896 z m -2.326,0.459 0.066,0.996 0.801,-0.053 -0.066,-0.998 z"
+       font-family="sans-serif"
+       font-weight="400"
+       overflow="visible"
+       style="font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-feature-settings:normal;text-indent:0;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;text-transform:none;text-orientation:mixed;shape-padding:0;isolation:auto;mix-blend-mode:normal;fill:#2e3436;fill-opacity:1"
+       white-space="normal"
+       id="path4" />
+    <path
+       d="M 7.574,1.014 A 6.981,6.981 0 0 0 5.227,1.572 7.005,7.005 0 0 0 1.145,9.416 7.005,7.005 0 0 0 8,15 H 8.5 V 14 H 8 A 5.996,5.996 0 0 1 2.123,9.213 5.995,5.995 0 0 1 5.623,2.49 5.995,5.995 0 0 1 12.914,4.559 l 0.287,0.41 0.82,-0.574 -0.287,-0.41 A 7.006,7.006 0 0 0 7.574,1.014 Z"
+       font-family="sans-serif"
+       font-weight="400"
+       overflow="visible"
+       style="font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-feature-settings:normal;text-indent:0;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;text-transform:none;text-orientation:mixed;shape-padding:0;isolation:auto;mix-blend-mode:normal;fill:#2e3436;fill-opacity:1"
+       white-space="normal"
+       id="path8" />
+    <path
+       style="fill:#2e3436;fill-opacity:1;stroke:#f9f9f9;stroke-width:0;stroke-linecap:round"
+       id="path855"
+       sodipodi:type="arc"
+       sodipodi:cx="8.0292339"
+       sodipodi:cy="8.0005903"
+       sodipodi:rx="5.095233"
+       sodipodi:ry="5.095233"
+       sodipodi:start="0"
+       sodipodi:end="4.1887902"
+       sodipodi:arc-type="slice"
+       d="M 13.124467,8.0005903 A 5.095233,5.095233 0 0 1 8.9140119,13.018415 5.095233,5.095233 0 0 1 3.2412811,9.7432626 5.095233,5.095233 0 0 1 5.4816174,3.5879892 l 2.5476165,4.4126011 z" />
+  </g>
 </svg>

@@ -1,30 +1,26 @@
-/* extension.js
- * SPDX-License-Identifier: GPL-2.0-or-later
- */
-
 //~ 🅲🅾🆄🅽🆃🅳🅾🆆🅽 / 🆃🅸🅼🅴🆁 𝕖𝕖𝕩𝕡𝕤𝕤@𝕘𝕞𝕒𝕚𝕝.𝕔𝕠𝕞
-//~ const Cairo = imports.cairo;
-//~ ⭕ cp ~/project/gnome-shell-countdown-timer/extension.js ~/.local/share/gnome-shell/extensions/countdown-timer@eexpss.gmail.com/; killall -3 gnome-shell
-
-const GETTEXT_DOMAIN = 'countdown-timer';	//这行说指向翻译的 mo 文件名的关键
-const _ = imports.gettext.domain(GETTEXT_DOMAIN).gettext;
 
 const { GObject, GLib, Gio, Clutter, St } = imports.gi;
 const ExtensionUtils = imports.misc.extensionUtils;
+const Me = ExtensionUtils.getCurrentExtension();
 const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 
-	let timeoutId = null;
-	const list = [];
-const Me = ExtensionUtils.getCurrentExtension();
-function lg(s){log("==="+Me.uuid.split('@')[0]+"===>"+s)};
+const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
+const _ = Gettext.gettext;
+
+const debug = false;
+function lg(s){ if(debug) log("==="+Me.metadata['gettext-domain']+"===>"+s); }
+
+let timeoutId = null;
+const list = [];
 
 const Indicator = GObject.registerClass(
 class Indicator extends PanelMenu.Button {
 	_init() {
 		var that = this;	// 想缓存，在闭包中，代替调用this。
-		super._init(0.0, _('Countdown Indicator'));
+		super._init(0.0, _(Me.metadata['name']));
 		let last_gicon = '';
 //~ -------------------  面板主图标 ---------------------------
 		const stock_icon = new St.Icon({ icon_name: 'alarm-symbolic', icon_size: 30 });
@@ -58,7 +54,6 @@ class Indicator extends PanelMenu.Button {
 			can_focus: true,
 			//~ hint_text: _('输入 数字 按分钟延时，或 HH:MM 格式定时，回车生效。'),
 			hint_text: _('Input DIGIT to countdown, or HH:MM to set timer. Then press ENTER.'),
-			track_hover: true,
 			x_expand: true,
 		});
 		// 需要限制输入的字符：数字和冒号
@@ -166,7 +161,7 @@ function mmmsg(icon, title, text) {	//支持本地图标
 class Extension {
 	constructor(uuid) {
 		this._uuid = uuid;
-		ExtensionUtils.initTranslations(GETTEXT_DOMAIN);
+		ExtensionUtils.initTranslations();
 	}
 
 	enable() {
@@ -201,6 +196,7 @@ class Extension {
 			GLib.Source.remove(timeoutId);
 			timeoutId = null;
 		}
+		lg("stop");
 	}
 }
 

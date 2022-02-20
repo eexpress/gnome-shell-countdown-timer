@@ -1,5 +1,9 @@
 # gnome-shell-countdown-timer
 
+[<img alt="" height="80" src="https://raw.githubusercontent.com/andyholmes/gnome-shell-extensions-badge/master/get-it-on-ego.svg?sanitize=true">](https://extensions.gnome.org/extension/4720/countdown-timer/)
+
+---
+
 [gnome-shell-extension]
 [gnome-extension]
 [gjs]

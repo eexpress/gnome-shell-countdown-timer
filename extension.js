@@ -25,7 +25,7 @@ const Indicator = GObject.registerClass(
 			super._init(0.0, _(Me.metadata['name']));
 			let last_gicon = '';
 			//~ -------------------  面板主图标 ---------------------------
-			const stock_icon = new St.Icon({ icon_name : 'alarm-symbolic', icon_size : 30 });
+			const stock_icon = new St.Icon({ icon_name : 'alarm-symbolic', style_class : 'system-status-icon' });
 			this.add_child(stock_icon);
 			//~ ----------------  第一行可选图标组 -------------------------
 			const item_icons = new PopupMenu.PopupMenuItem('');
